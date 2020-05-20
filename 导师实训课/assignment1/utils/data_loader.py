@@ -17,8 +17,8 @@ def read_data(path_1, path_2, path_3):
         words = []
         # print(f1)
         for line in f1:
-            # 修改 改成words +=
-            words += line.split()
+            # update by xjy (words = line.split()) 默认为所有的空字符，包括空格、换行(\n)、制表符(\t)等
+            words += line.split(' ')
 
         for line in f2:
             words += line.split(' ')
@@ -53,8 +53,9 @@ def build_vocab(items, sort=True, min_count=0, lower=False):
         按照字典里的词频进行排序，出现次数多的排在前面
         your code(one line)
         """
+        # reverse= True 按value从大到小排序
         dic = sorted(dic.items(), key=lambda x:x[1], reverse= True)
-
+        # 对dic进行枚举遍历
         for i, item in enumerate(dic):
             key = item[0]
             if min_count and min_count > item[1]:
@@ -82,4 +83,5 @@ if __name__ == '__main__':
                       '{}/datasets/train_set.seg_y.txt'.format(BASE_DIR),
                       '{}/datasets/test_set.seg_x.txt'.format(BASE_DIR))
     vocab, reverse_vocab = build_vocab(lines)
+    # 为什么不存储reverse_vocab？ 如果要存储，需要更新函数save_word_dict里前后顺序
     save_word_dict(vocab, '{}/datasets/vocab.txt'.format(BASE_DIR))

@@ -14,11 +14,12 @@ def read_lines(path, col_sep=' '):
             line = line.strip()
             # print(line)
             '''
-            暂时注释
+            暂时注释 对句子按空格进行分割，传入sentences
             if col_sep:
                 if col_sep in line:
                     lines.append(line)
             '''
+            # col_sep非空，有设置分隔符
             if col_sep:
                 if col_sep in line:
                     lines.append(line.split(col_sep))
@@ -28,19 +29,20 @@ def read_lines(path, col_sep=' '):
 
 
 def extract_sentence(train_x_seg_path, train_y_seg_path, test_seg_path):
-    ret = []
+    # ret = []
     lines = read_lines(train_x_seg_path)
     lines += read_lines(train_y_seg_path)
     lines += read_lines(test_seg_path)
-    for line in lines:
-        ret.append(line)
-    return ret
-
+    # for line in lines:
+    #     ret.append(line)
+    # return ret
+    return lines
 
 def save_sentence(lines, sentence_path):
     with open(sentence_path, 'w', encoding='utf-8') as f:
         for line in lines:
-            f.write('%s\n' % line.strip())
+            # f.write('%s\n' % line.strip())
+            f.write('%s\n' % line)
     print('save sentence:%s' % sentence_path)
 
 # 词向量的训练
@@ -49,6 +51,7 @@ def build(train_x_seg_path, test_y_seg_path, test_seg_path, out_path=None, sente
     # 读取三个文件源然后合并三个文件中的句子
     # 根据col_sep进行拆分词
     sentences = extract_sentence(train_x_seg_path, test_y_seg_path, test_seg_path)
+    # print(sentences[:5])
     save_sentence(sentences, sentence_path)
 
     print('train w2v model...')
@@ -71,7 +74,9 @@ def build(train_x_seg_path, test_y_seg_path, test_seg_path, out_path=None, sente
     print(model['技师'])
     sim = model.wv.similarity(u'技师', u'车主')
     print('技师 vs 车主 similarity score:', sim)
+    # 打印出来为0.7745
 
+    # 存储词向量数据
     word_dict = {}
     for word in model.vocab:
         word_dict[word] = model[word]

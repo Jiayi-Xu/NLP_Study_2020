@@ -7,10 +7,10 @@ from tokenizer import segment
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+# 移除无用词常量 检查原始数据【语音】【图片】不包含信息，可以移除
 REMOVE_WORDS = ['|', '[', ']', '语音', '图片', ' ']
 
-
+# 定义读取停用词的函数
 def read_stopwords(path):
     lines = set()
     with open(path, mode='r', encoding='utf-8') as f:
@@ -19,18 +19,21 @@ def read_stopwords(path):
             lines.add(line)
     return lines
 
-
+# 定义移除无用词的函数
 def remove_words(words_list):
     words_list = [word for word in words_list if word not in REMOVE_WORDS]
     return words_list
 
-
+# 解析数据
 def parse_data(train_path, test_path):
+    # 处理训练数据 X: Question和Dialogue Y: Report
     train_df = pd.read_csv(train_path, encoding='utf-8')
     train_df.dropna(subset=['Report'], how='any', inplace=True)
     train_df.fillna('', inplace=True)
+    # 连接Question和Dialogue
     train_x = train_df.Question.str.cat(train_df.Dialogue)
     print('train_x is ', len(train_x))
+    # 对训练数据的每一行进行预处理
     train_x = train_x.apply(preprocess_sentence)
     print('train_x is ', len(train_x))
     train_y = train_df.Report
@@ -41,6 +44,7 @@ def parse_data(train_path, test_path):
         # train_y = train_df.Report
         # print('train_y is ', len(train_y))
 
+    # 处理测试数据
     test_df = pd.read_csv(test_path, encoding='utf-8')
     test_df.fillna('', inplace=True)
     test_x = test_df.Question.str.cat(test_df.Dialogue)
@@ -51,7 +55,7 @@ def parse_data(train_path, test_path):
     train_y.to_csv('{}/datasets/train_set.seg_y.txt'.format(BASE_DIR), index=None, header=False)
     test_x.to_csv('{}/datasets/test_set.seg_x.txt'.format(BASE_DIR), index=None, header=False)
 
-
+# 句子预处理：jieba分词 移除无用词 并用空格连接
 def preprocess_sentence(sentence):
     seg_list = segment(sentence.strip(), cut_type='word')
     seg_list = remove_words(seg_list)
