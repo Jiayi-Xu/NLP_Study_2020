@@ -51,7 +51,7 @@ def build(train_x_seg_path, test_y_seg_path, test_seg_path, out_path=None, sente
     # 读取三个文件源然后合并三个文件中的句子
     # 根据col_sep进行拆分词
     sentences = extract_sentence(train_x_seg_path, test_y_seg_path, test_seg_path)
-    # print(sentences[:5])
+    print(sentences[:5])
     save_sentence(sentences, sentence_path)
 
     print('train w2v model...')
