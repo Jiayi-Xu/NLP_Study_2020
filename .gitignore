@@ -1,5 +1,8 @@
 /导师实训课/assignment1/utils/__pycache__
 /导师实训课/assignment1/datasets
+/导师实训课/assignment2/datasets
+__pycache__
+.idea
 *.bin
 *.json
-/.ipynb_checkpoints
+.ipynb_checkpoints
