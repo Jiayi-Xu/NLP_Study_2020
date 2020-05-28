@@ -47,7 +47,7 @@ def save_sentence(lines, sentence_path):
 
 # 词向量的训练
 def build(train_x_seg_path, test_y_seg_path, test_seg_path, out_path=None, sentence_path='',
-          w2v_bin_path="w2v.bin", min_count=1):
+          w2v_bin_path="w2v.bin", min_count=5):
     # 读取三个文件源然后合并三个文件中的句子
     # 根据col_sep进行拆分词
     sentences = extract_sentence(train_x_seg_path, test_y_seg_path, test_seg_path)
@@ -63,7 +63,7 @@ def build(train_x_seg_path, test_y_seg_path, test_seg_path, out_path=None, sente
     """
     # 如果模型还未训练过，则开始训练，否则的话跳过训练，直接加载模型
     if not os.path.exists(w2v_bin_path):
-        model = Word2Vec(sentences, size=256, window=3, min_count=1, workers=4)
+        model = Word2Vec(sentences, size=256, window=3, min_count, workers=4)
         model.wv.save_word2vec_format(w2v_bin_path, binary=True)
         print("save %s ok." % w2v_bin_path)
 
@@ -74,12 +74,13 @@ def build(train_x_seg_path, test_y_seg_path, test_seg_path, out_path=None, sente
     print(model['技师'])
     sim = model.wv.similarity(u'技师', u'车主')
     print('技师 vs 车主 similarity score:', sim)
-    # 打印出来为0.7745
+    # 打印出来为0.764
 
     # 存储词向量数据
     word_dict = {}
     for word in model.vocab:
         word_dict[word] = model[word]
+    #     为什么后缀不是pkl？？
     dump_pkl(word_dict, out_path, overwrite=True)
 
 

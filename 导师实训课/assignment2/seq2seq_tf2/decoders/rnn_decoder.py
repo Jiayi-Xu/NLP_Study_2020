@@ -4,6 +4,7 @@ import tensorflow as tf
 class BahdanauAttention(tf.keras.layers.Layer):
     def __init__(self, units):
         super(BahdanauAttention, self).__init__()
+        # units这里为256
         self.W1 = tf.keras.layers.Dense(units)
         self.W2 = tf.keras.layers.Dense(units)
         self.V = tf.keras.layers.Dense(1)
@@ -39,7 +40,8 @@ class BahdanauAttention(tf.keras.layers.Layer):
         your code
         """
         # 每一个encoder的hidden states对应的权重
-        attn_dist = tf.nn.softmax(score, axis = 1)
+        attn_dist = tf.nn.softmax(score, axis = 1) #(16, 200, 1)
+
         # context_vector shape after sum == (batch_size, hidden_size)
 
         # 上下文变量context vector是一个对于encoder输出的hidden states的一个加权平均。
@@ -58,13 +60,19 @@ class Decoder(tf.keras.layers.Layer):
         定义Embedding层，加载预训练的词向量
         your code
         """
-        self.embedding = tf.keras.layers.Embedding(vocab_size,embedding_dim,weights=(embedding_matrix),trainable=False)
+        self.embedding = tf.keras.layers.Embedding(vocab_size, embedding_dim, weights=[embedding_matrix], trainable=False)
 
         """
         定义单向的RNN、GRU、LSTM层
         your code
         """
-        self.gru = tf.keras.layers.GRU(self.dec_units,return_sequences=True,return_state=True,recurrent_initializer='glorot_uniform')
+        gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
+
+        if gpus:
+            self.gru = tf.keras.layers.CuDNNGRU(self.dec_units,return_sequences=True,return_state=True,recurrent_initializer='glorot_uniform')
+        else:
+            self.gru = tf.keras.layers.GRU(self.dec_units, return_sequences=True, return_state=True,
+                                           recurrent_initializer='glorot_uniform')
 
         # self.dropout = tf.keras.layers.Dropout(0.5)
         """

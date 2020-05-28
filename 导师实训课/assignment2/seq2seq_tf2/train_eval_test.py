@@ -13,12 +13,17 @@ import pprint
 
 def train(params):
     assert params["mode"].lower() == "train", "change training mode to 'train'"
-
+    # 对应文件vocab.txt vocab_size参数设置为30000
+    # Vocab类定义在batcher下
     vocab = Vocab(params["vocab_path"], params["vocab_size"])
-    print('true vocab is ', vocab)
+    # print('true vocab is ', vocab) 注释，返回的是object类型
+    print('true vocab is ', vocab.count) # 为设定的30000
+
 
     print("Creating the batcher ...")
     b = batcher(vocab, params)
+    # print(type(b))
+    # <class 'tensorflow.python.data.ops.dataset_ops.DatasetV1Adapter'>
 
     print("Building the model ...")
     model = SequenceToSequence(params)

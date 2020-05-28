@@ -24,6 +24,7 @@ def segment(sentence, cut_type='word', pos=False):
     """
     if pos:
         if cut_type == 'word':
+            # 在分词的时候还能给出词性
             word_pos_seq = posseg.lcut(sentence)
             word_seq, pos_seq = [], []
             for w, p in word_pos_seq:

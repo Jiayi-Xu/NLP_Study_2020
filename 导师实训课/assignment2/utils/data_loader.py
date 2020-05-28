@@ -72,16 +72,24 @@ def build_vocab(items, sort=True, min_count=0, lower=False):
     vocab = (one line)
     reverse_vocab = (one line)
     """
-    vocab = [ (item[0], index) for index, item in enumerate(dic)]
-    reverse_vocab = [(index, item[0]) for index, item in enumerate(dic)]
+    vocab = [ (item, index) for index, item in enumerate(result)]
+    reverse_vocab = [(index, item) for index, item in enumerate(result)]
 
     return vocab, reverse_vocab
 
 
 if __name__ == '__main__':
+    """
+    这三个文件由程序preprocess产出，格式为jieba分词后再移除停用词 ' '.join成的句子
+        train_set.seg_x.txt，
+        train_set.seg_y.txt，
+        test_set.seg_x.txt
+    调用read_data函数返回的是包含train_x,train_y,test_x的词列表
+    """
     lines = read_data('{}/datasets/train_set.seg_x.txt'.format(BASE_DIR),
                       '{}/datasets/train_set.seg_y.txt'.format(BASE_DIR),
                       '{}/datasets/test_set.seg_x.txt'.format(BASE_DIR))
-    vocab, reverse_vocab = build_vocab(lines)
+    # sort默认为TRUE 按频率排序
+    vocab, reverse_vocab = build_vocab(lines, min_count=5)
     # 为什么不存储reverse_vocab？ 如果要存储，需要更新函数save_word_dict里前后顺序
     save_word_dict(vocab, '{}/datasets/vocab.txt'.format(BASE_DIR))

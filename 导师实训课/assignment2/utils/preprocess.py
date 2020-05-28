@@ -11,6 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REMOVE_WORDS = ['|', '[', ']', '语音', '图片', ' ']
 
 # 定义读取停用词的函数
+# 需要注意的是 停用词为中文符号
 def read_stopwords(path):
     lines = set()
     with open(path, mode='r', encoding='utf-8') as f:
@@ -19,13 +20,28 @@ def read_stopwords(path):
             lines.add(line)
     return lines
 
-# 定义移除无用词的函数
+# 定义移除无用词的函数 jieba.lcut 返回的是list
 def remove_words(words_list):
-    words_list = [word for word in words_list if word not in REMOVE_WORDS]
+    # print("处理之前：",words_list)
+    # 原始 words_list = [word for word in words_list if word not in REMOVE_WORDS]
+    words_list = [word for word in words_list if word.strip() not in REMOVE_WORDS]
+    # print("处理之后：",words_list)
     return words_list
 
-# 解析数据
-def parse_data(train_path, test_path):
+"""
+对train和test文本进行解析数据
+
+对每一行调用preprocess_sentence函数
+    将句子用jieba进行分词
+    移除remove_words里的词
+    返回分词后的句子
+    产出三个文件：
+        train_set.seg_x.txt，
+        train_set.seg_y.txt，
+        test_set.seg_x.txt
+"""
+
+def parse_data(train_path, test_path ):
     # 处理训练数据 X: Question和Dialogue Y: Report
     train_df = pd.read_csv(train_path, encoding='utf-8')
     train_df.dropna(subset=['Report'], how='any', inplace=True)
@@ -57,6 +73,8 @@ def parse_data(train_path, test_path):
 
 # 句子预处理：jieba分词 移除无用词 并用空格连接
 def preprocess_sentence(sentence):
+    # segment(sentence, cut_type='word', pos=False) 使用了jieba.lcut(sentence)
+    # jieba.lcut 直接生成的就是一个list
     seg_list = segment(sentence.strip(), cut_type='word')
     seg_list = remove_words(seg_list)
     seg_line = ' '.join(seg_list)
@@ -64,8 +82,19 @@ def preprocess_sentence(sentence):
 
 
 if __name__ == '__main__':
+    stopwords = read_stopwords('{}/datasets/stopwords.txt'.format(BASE_DIR))
+    # print("REMOVE_WORDS长度为", len(REMOVE_WORDS))
+    # print("stopwords is", list(stopwords)[:10])
+    REMOVE_WORDS.extend(stopwords)
+    # print("REMOVE_WORDS长度为",REMOVE_WORDS,len(REMOVE_WORDS))
     # 需要更换成自己数据的存储地址
+    # 对数据进行预处理，再调用preprocess_sentence处理句子
+
     parse_data('{}/datasets/AutoMaster_TrainSet.csv'.format(BASE_DIR),
                '{}/datasets/AutoMaster_TestSet.csv'.format(BASE_DIR))
+
+    # 小文件用于测试跑通程序用
+    # parse_data('{}/datasets/AutoMaster_TrainSet_small.csv'.format(BASE_DIR),
+    #            '{}/datasets/AutoMaster_TestSet_small.csv'.format(BASE_DIR))
 
 

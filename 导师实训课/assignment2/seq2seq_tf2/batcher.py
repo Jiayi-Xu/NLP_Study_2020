@@ -154,6 +154,7 @@ def get_dec_inp_targ_seqs(sequence, max_len, start_id, stop_id):
 def example_generator(vocab, train_x_path, train_y_path, test_x_path, max_enc_len, max_dec_len, mode, batch_size):
 
     if mode == "train":
+        # TextLineDataset: 从文本文件中读取行
         dataset_train_x = tf.data.TextLineDataset(train_x_path)
         dataset_train_y = tf.data.TextLineDataset(train_y_path)
         train_dataset = tf.data.Dataset.zip((dataset_train_x, dataset_train_y))
@@ -166,6 +167,7 @@ def example_generator(vocab, train_x_path, train_y_path, test_x_path, max_enc_le
             start_decoding = vocab.word_to_id(START_DECODING)
             stop_decoding = vocab.word_to_id(STOP_DECODING)
 
+            # max_enc_len设置为了200
             article_words = article.split()[:max_enc_len]
             enc_len = len(article_words)
             # 添加mark标记
@@ -199,6 +201,7 @@ def example_generator(vocab, train_x_path, train_y_path, test_x_path, max_enc_le
                 "sample_decoder_pad_mask": sample_decoder_pad_mask,
                 "sample_encoder_pad_mask": sample_encoder_pad_mask,
             }
+            # yield类似于return 返回一个生成器
             yield output
 
     if mode == "test":
@@ -313,6 +316,7 @@ def batch_generator(generator, vocab, train_x_path, train_y_path,
                  "abstract": entry["abstract"],
                  "sample_decoder_pad_mask": entry["sample_decoder_pad_mask"]})
 
+    # map接收一个函数，Dataset中的每个元素都会被当作这个函数的输入，并将函数返回值作为新的Dataset。通常用于数据变换或者解析与编码文件数据。
     dataset = dataset.map(update)
     return dataset
 

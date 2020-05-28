@@ -250,10 +250,14 @@ def load_word2vec(params):
     :param vocab_size:
     :return:
     """
+    # word2vec_dict 格式为 word : embedding 256维度
     word2vec_dict = load_pkl(params['word2vec_output'])
     vocab_dict = open(params['vocab_path'], encoding='utf-8').readlines()
     embedding_matrix = np.zeros((params['vocab_size'], params['embed_size']))
-
+    """
+    取vocab.txt前vocab_size个词[这里设置为了30000]
+    格式为 word : index
+    """
     for line in vocab_dict[:params['vocab_size']]:
         word_id = line.split()
         word, i = word_id
