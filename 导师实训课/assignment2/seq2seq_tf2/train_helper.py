@@ -45,7 +45,7 @@ def train_model(model, dataset, params, ckpt, ckpt_manager):
         return loss
 
     best_loss = 20
-    epochs = params['epochs']
+    epochs = params['epochs'] # 设置为了10
     for epoch in range(epochs):
         t0 = time.time()
         step = 0
@@ -60,14 +60,14 @@ def train_model(model, dataset, params, ckpt, ckpt_manager):
             step += 1
             total_loss += loss
             if step % 100 == 0:
-                print('Epoch {} Batch {} Loss {:.4f}'.format(epoch + 1, step, total_loss / step))
+                print('Epoch {} Batch {} Loss {:.4f}'.format(epoch+1 , step, total_loss / step))
                 # print('Epoch {} Batch {} Loss {:.4f}'.format(epoch + 1, step, loss.numpy()))
-
-        if epoch % 1 == 0: 
+        # 每两个epoch存储一次
+        if epoch % 2 == 0:
             if total_loss / step < best_loss:
                 best_loss = total_loss / step
                 ckpt_save_path = ckpt_manager.save()
-                print('Saving checkpoint for epoch {} at {} ,best loss {}'.format(epoch + 1, ckpt_save_path, best_loss))
+                print('Saving checkpoint for epoch {} at {} ,best loss {}'.format(epoch+1, ckpt_save_path, best_loss))
                 print('Epoch {} Loss {:.4f}'.format(epoch + 1, total_loss / step))
                 print('Time taken for 1 epoch {} sec\n'.format(time.time() - t0))
 

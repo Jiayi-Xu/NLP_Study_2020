@@ -19,13 +19,21 @@ NUM_SAMPLES = 82706
 def main():
     parser = argparse.ArgumentParser()
     # 模型参数
+    """
+    max_enc_len:200
+    max_dec_len:40
+    max_dec_steps:100
+    min_dec_steps:30
+    batch_size:200
+    vocab_size:30000
+    """
     parser.add_argument("--max_enc_len", default=200, help="Encoder input max sequence length", type=int)
     parser.add_argument("--max_dec_len", default=40, help="Decoder input max sequence length", type=int)
     parser.add_argument("--max_dec_steps", default=100,
                         help="maximum number of words of the predicted abstract", type=int)
     parser.add_argument("--min_dec_steps", default=30,
                         help="Minimum number of words of the predicted abstract", type=int)
-    parser.add_argument("--batch_size", default=16, help="batch size", type=int)
+    parser.add_argument("--batch_size", default=200, help="batch size", type=int)
     parser.add_argument("--beam_size", default=3,
                         help="beam size for beam search decoding (must be equal to batch size in decode mode)",
                         type=int)
@@ -62,6 +70,7 @@ def main():
     parser.add_argument("--test_x_dir", default='{}/datasets/AutoMaster_TestSet.csv'.format(BASE_DIR), help="test_x_dir")
 
     # others
+    # steps_per_epoch
     parser.add_argument("--steps_per_epoch", default=1300, help="max_train_steps", type=int)
     parser.add_argument("--checkpoints_save_steps", default=10, help="Save checkpoints every N steps", type=int)
     parser.add_argument("--max_steps", default=10000, help="Max number of iterations", type=int)

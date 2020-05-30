@@ -29,7 +29,7 @@ def train(params):
     model = SequenceToSequence(params)
 
     print("Creating the checkpoint manager")
-    checkpoint_dir = "{}/checkpoint".format(params["seq2seq_model_dir"])
+    checkpoint_dir = "{}/checkpoint_vocab30000".format(params["seq2seq_model_dir"])
     ckpt = tf.train.Checkpoint(SequenceToSequence=model)
     ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_dir, max_to_keep=5)
 

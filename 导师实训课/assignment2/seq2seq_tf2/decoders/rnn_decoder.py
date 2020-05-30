@@ -66,10 +66,11 @@ class Decoder(tf.keras.layers.Layer):
         定义单向的RNN、GRU、LSTM层
         your code
         """
+        # 获取是否gpu配置
         gpus = tf.config.experimental.list_physical_devices(device_type='GPU')
 
         if gpus:
-            self.gru = tf.keras.layers.CuDNNGRU(self.dec_units,return_sequences=True,return_state=True,recurrent_initializer='glorot_uniform')
+            self.gru = tf.compat.v1.keras.layers.CuDNNGRU(self.dec_units,return_sequences=True,return_state=True,recurrent_initializer='glorot_uniform')
         else:
             self.gru = tf.keras.layers.GRU(self.dec_units, return_sequences=True, return_state=True,
                                            recurrent_initializer='glorot_uniform')
