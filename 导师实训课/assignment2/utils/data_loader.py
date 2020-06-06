@@ -90,6 +90,6 @@ if __name__ == '__main__':
                       '{}/datasets/train_set.seg_y.txt'.format(BASE_DIR),
                       '{}/datasets/test_set.seg_x.txt'.format(BASE_DIR))
     # sort默认为TRUE 按频率排序
-    vocab, reverse_vocab = build_vocab(lines, min_count=5)
+    vocab, reverse_vocab = build_vocab(lines, min_count=1)
     # 为什么不存储reverse_vocab？ 如果要存储，需要更新函数save_word_dict里前后顺序
     save_word_dict(vocab, '{}/datasets/vocab.txt'.format(BASE_DIR))
