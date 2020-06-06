@@ -1,7 +1,18 @@
 
 # 执行
 
-运行记录在文件 “华为云代码运行记录.ipynb”
+## greedy search
+
+因为train数据里report数据有分词后序列长度为2的结果，
+测试了不同min_dec_steps=40和2的结果，有很多重复，结果不理想
+
+## beam search
+
+因为跑全量测试集时候20000条，每条句子又步长可达100，跑起来很久，所以从AutoMaster_TestSet.csv提取了前十条数据进行测试验证
+
+
+运行记录在文件 “华为云运行结果-beam和greedy.ipynb”
+
 
 
 # 预处理
@@ -102,13 +113,13 @@ save\_word\_dict(vocab, '{}/datasets/vocab.txt'.format(BASE\_DIR))
 ### test函数
 
 + 建立词索引，引入model
-+ predict_result(model, params, vocab, params['test_save_dir'])
-	+ results = greedy_decode(model, dataset, vocab, params)
-		+ batch\_greedy\_decode(model, enc_data, vocab, params)  
++ 根据参数greedy_mode的配置进入不同的查找分支进行测试验证
+	+ batch\_greedy\_decode(model, enc_data, vocab, params)  
+	+ beam\_decode(model, batch, vocab, params)
 
 
 
-## rnn_encoder.py
+
 
 
 
