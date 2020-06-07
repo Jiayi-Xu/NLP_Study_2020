@@ -89,11 +89,11 @@ if __name__ == '__main__':
     # 需要更换成自己数据的存储地址
     # 对数据进行预处理，再调用preprocess_sentence处理句子
 
-    # parse_data('{}/datasets/AutoMaster_TrainSet.csv'.format(BASE_DIR),
-    #            '{}/datasets/AutoMaster_TestSet.csv'.format(BASE_DIR))
+    parse_data('{}/datasets/AutoMaster_TrainSet.csv'.format(BASE_DIR),
+               '{}/datasets/AutoMaster_TestSet.csv'.format(BASE_DIR))
 
     # 小文件用于测试跑通程序用
-    parse_data('{}/datasets/AutoMaster_TrainSet_small.csv'.format(BASE_DIR),
-               '{}/datasets/AutoMaster_TestSet_small.csv'.format(BASE_DIR))
+    # parse_data('{}/datasets/AutoMaster_TrainSet_small.csv'.format(BASE_DIR),
+    #            '{}/datasets/AutoMaster_TestSet_small.csv'.format(BASE_DIR))
 
 
