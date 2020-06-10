@@ -4,6 +4,7 @@ import tensorflow as tf
 class BahdanauAttentionCoverage(tf.keras.layers.Layer):
     def __init__(self, units):
         super(BahdanauAttentionCoverage, self).__init__()
+        # Wc作用？
         self.Wc = tf.keras.layers.Dense(units)
         self.W1 = tf.keras.layers.Dense(units)
         self.W2 = tf.keras.layers.Dense(units)

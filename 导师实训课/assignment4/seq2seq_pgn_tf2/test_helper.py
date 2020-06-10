@@ -106,11 +106,12 @@ def beam_decode(model, batch, vocab, params):
     enc_input = batch[0]["enc_input"]
     enc_outputs, state = model.call_encoder(enc_input)
     # Initial Hypothesises (beam_size many list)
+    # 原始代码 p_gens和attn_dists顺序反了
     hyps = [Hypothesis(tokens=[vocab.word_to_id('[START]')],
                        log_probs=[0.0],
                        state=state[0],
-                       p_gens=[],
                        attn_dists=[],
+                       p_gens=[],
                        coverage=np.zeros([enc_input.shape[1], 1], dtype=np.float32)) for _ in range(params['batch_size'])]
     results = []  # list to hold the top beam_size hypothesises
     steps = 0  # initial step
@@ -119,6 +120,7 @@ def beam_decode(model, batch, vocab, params):
         # we replace all the oov is by the unknown token
         latest_tokens = [t if t in range(params['vocab_size']) else vocab.word_to_id('[UNK]') for t in latest_tokens]
         # we collect the last states for each hypothesis
+        # 获取所有隐藏层状态
         states = [h.state for h in hyps]
         # prev_coverage = [h.coverage for h in hyps]  # list of coverage vectors (or None)
         # prev_coverage = tf.convert_to_tensor(prev_coverage)
@@ -168,9 +170,11 @@ def beam_decode(model, batch, vocab, params):
         sorted_hyps = sorted(all_hyps, key=lambda h: h.avg_log_prob, reverse=True)
         for h in sorted_hyps:
             if h.latest_token == vocab.word_to_id('[STOP]'):
+                # 长度符合预期,遇到句尾,添加到结果集
                 if steps >= params['min_dec_steps']:
                     results.append(h)
             else:
+                # 未到结束 ,添加到假设集
                 hyps.append(h)
             if len(hyps) == params['beam_size'] or len(results) == params['beam_size']:
                 break
