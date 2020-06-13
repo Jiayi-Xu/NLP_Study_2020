@@ -15,6 +15,7 @@ def train_model(model, dataset, params, ckpt, ckpt_manager):
         with tf.GradientTape() as tape:
             enc_output, enc_hidden = model.call_encoder(enc_inp)
             dec_hidden = enc_hidden
+            # 训练阶段时参考摘要词依次输入(测试阶段时是上一步的生成词)
             outputs = model(enc_output,  # shape=(3, 200, 256)
                             dec_hidden,  # shape=(3, 256)
                             enc_inp,  # shape=(3, 200)

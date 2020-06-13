@@ -11,7 +11,12 @@ class Encoder(tf.keras.layers.Layer):
                                                    embedding_dim,
                                                    weights=[embedding_matrix],
                                                    trainable=False)
-        # tf.keras.layers.GRU自动匹配cpu、gpu
+        """        
+        tf.keras.layers.GRU自动匹配cpu、gpu
+        enc_units: dimensionality of the output space
+        return_sequences: Boolean. Whether to return the last output in the output sequence, or the full sequence.
+        return_state: Boolean. Whether to return the last state in addition to the output
+        """
         self.gru = tf.keras.layers.GRU(self.enc_units,
                                        return_sequences=True,
                                        return_state=True,

@@ -64,6 +64,7 @@ class BahdanauAttentionCoverage(tf.keras.layers.Layer):
             coverage = attn_dist + prev_coverage
 
         else:
+            # 使用ℎ𝑖和𝑠𝑡得到该时间步 原文第𝑖个词注意力权重。
             # Calculate v^T tanh(W_h h_i + W_s s_t + b_attn)
             e = self.V(tf.nn.tanh(self.W1(enc_output) + self.W2(hidden_with_time_axis)))  # shape=(16, 200, 1)
             # Calculate attention distribution
@@ -106,6 +107,7 @@ class Decoder(tf.keras.layers.Layer):
         x = tf.concat([tf.expand_dims(context_vector, 1), x], axis=-1)
 
         # passing the concatenated vector to the GRU
+        # decoder使用gru的话，可以不传hidden，而是直接代入到attention里面去计算context_vector和attention_weights
         output, state = self.gru(x)
         # output shape == (batch_size * 1, hidden_size)
         output = tf.reshape(output, (-1, output.shape[2]))

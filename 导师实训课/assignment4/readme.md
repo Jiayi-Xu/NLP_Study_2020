@@ -1,18 +1,23 @@
 
-# 执行
+# PGN模型
+
+train一个epoch用了8小时，只跑了一个epoch
+
+test：从AutoMaster_TestSet.csv提取了前100条数据进行测试验证
+
+运行记录在文件 “华为云运行结果.ipynb”
+
+
+# 搜索方式
 
 ## greedy search
 
 因为train数据里report数据有分词后序列长度为2的结果，
-测试了不同min_dec_steps=40和2的结果，有很多重复，结果不理想
+测试了不同min\_dec\_steps=40和2的结果，有很多重复，结果不理想
 
 ## beam search
 
 因为跑全量测试集时候20000条，每条句子又步长可达100，跑起来很久，所以从AutoMaster_TestSet.csv提取了前十条数据进行测试验证
-
-
-运行记录在文件 “华为云运行结果-beam和greedy.ipynb”
-
 
 
 # 预处理
@@ -143,3 +148,7 @@ Vocab类：
 + https://tensorflow.google.cn/api_docs/python/tf/split?hl=en
 	+ tf.split(value, num\_or\_size\_splits, axis=0, num=None, name='split'
 )
+
++ tf.keras.layers.GRU
+	+ https://tensorflow.google.cn/versions/r2.0/api_docs/python/tf/keras/layers/GRU
+	+ 

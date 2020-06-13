@@ -29,15 +29,17 @@ class PGN(tf.keras.Model):
         enc_output, enc_hidden = self.encoder(enc_inp, enc_hidden)
         return enc_output, enc_hidden
 
-    # model(enc_output,  # shape=(3, 200, 256)
-    #                             dec_hidden,  # shape=(3, 256)
-    #                             enc_inp,  # shape=(3, 200)
-    #                             enc_extended_inp,  # shape=(3, 200)
-    #                             dec_inp,  # shape=(3, 50)
-    #                             batch_oov_len,  # shape=()
-    #                             enc_padding_mask,  # shape=(3, 200)
-    #                             params['is_coverage'],
-    #                             prev_coverage=None)
+    """
+    model(enc_output,  # shape=(3, 200, 256)
+    dec_hidden,  # shape=(3, 256)
+    enc_inp,  # shape=(3, 200)
+    enc_extended_inp,  # shape=(3, 200)
+    dec_inp,  # shape=(3, 50)
+    batch_oov_len,  # shape=()
+    enc_padding_mask,  # shape=(3, 200)
+    params['is_coverage'],
+    prev_coverage=None)
+    """
     def call(self, enc_output, dec_hidden, enc_inp,
              enc_extended_inp, dec_inp, batch_oov_len,
              enc_padding_mask, use_coverage, prev_coverage):
