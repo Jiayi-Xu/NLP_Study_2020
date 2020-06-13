@@ -29,6 +29,15 @@ class PGN(tf.keras.Model):
         enc_output, enc_hidden = self.encoder(enc_inp, enc_hidden)
         return enc_output, enc_hidden
 
+    # model(enc_output,  # shape=(3, 200, 256)
+    #                             dec_hidden,  # shape=(3, 256)
+    #                             enc_inp,  # shape=(3, 200)
+    #                             enc_extended_inp,  # shape=(3, 200)
+    #                             dec_inp,  # shape=(3, 50)
+    #                             batch_oov_len,  # shape=()
+    #                             enc_padding_mask,  # shape=(3, 200)
+    #                             params['is_coverage'],
+    #                             prev_coverage=None)
     def call(self, enc_output, dec_hidden, enc_inp,
              enc_extended_inp, dec_inp, batch_oov_len,
              enc_padding_mask, use_coverage, prev_coverage):
@@ -40,7 +49,11 @@ class PGN(tf.keras.Model):
         通过调用attention得到decoder第一步所需的context_vector，coverage等值
         your code
         """
-
+        # def call(self, dec_hidden, enc_output, enc_padding_mask, use_coverage=False, prev_coverage=None):
+        # 返回结果：context_vector, tf.squeeze(attn_dist, -1), coverage
+        # print("通过调用attention得到decoder第一步所需的context_vector，coverage等值")
+        context_vector, attn_dist, coverage_next = self.attention(dec_hidden, enc_output, enc_padding_mask, use_coverage, prev_coverage)
+        # print("开始一步步解码")
         for t in range(dec_inp.shape[1]):
             # Teachering Forcing
             dec_x, pred, dec_hidden = self.decoder(tf.expand_dims(dec_inp[:, t], 1),
@@ -52,6 +65,7 @@ class PGN(tf.keras.Model):
                                                                       enc_padding_mask,
                                                                       use_coverage,
                                                                       coverage_next)
+
             p_gen = self.pointer(context_vector, dec_hidden, tf.squeeze(dec_x, axis=1))
             predictions.append(pred)
             coverages.append(coverage_next)
@@ -62,6 +76,7 @@ class PGN(tf.keras.Model):
         调用calc_final_dist函数完成PGN最终预测概率输出
         your code
         """
+        final_dists = decoding.calc_final_dist(enc_extended_inp, predictions, attentions, p_gens, batch_oov_len, self.params["vocab_size"], self.params["batch_size"])
         
         # outputs = dict(logits=tf.stack(final_dists, 1), dec_hidden=dec_hidden, attentions=attentions, coverages=coverages)
         if self.params['mode'] == "train":

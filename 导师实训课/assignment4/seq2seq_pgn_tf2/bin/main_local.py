@@ -59,7 +59,7 @@ def main():
     parser.add_argument("--log_file", help="File in which to redirect console outputs", default="", type=str)
     parser.add_argument("--test_save_dir", default='{}/datasets/'.format(BASE_DIR), help="test_save_dir")
     # 本地测试时候使用文件AutoMaster_TestSet_small
-    parser.add_argument("--test_x_dir", default='{}/datasets/AutoMaster_TestSet.csv'.format(BASE_DIR), help="test_x_dir")
+    parser.add_argument("--test_x_dir", default='{}/datasets/AutoMaster_TestSet_small.csv'.format(BASE_DIR), help="test_x_dir")
 
     # others
     parser.add_argument("--steps_per_epoch", default=8087, help="max_train_steps", type=int)
@@ -67,7 +67,7 @@ def main():
     parser.add_argument("--max_steps", default=10000, help="Max number of iterations", type=int)
     parser.add_argument("--num_to_test", default=20000, help="Number of examples to test", type=int)
     parser.add_argument("--max_num_to_eval", default=5, help="max_num_to_eval", type=int)
-    parser.add_argument("--epochs", default=20, help="train epochs", type=int)
+    parser.add_argument("--epochs", default=2, help="train epochs", type=int)
     
     # transformer
     parser.add_argument('--d_model', default=512, type=int,

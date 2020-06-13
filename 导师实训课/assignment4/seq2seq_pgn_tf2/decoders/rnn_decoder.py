@@ -22,9 +22,12 @@ class BahdanauAttentionCoverage(tf.keras.layers.Layer):
         # hidden shape == (batch_size, hidden size)
         # hidden_with_time_axis shape == (batch_size, 1, hidden size)
         # we are doing this to perform addition to calculate the score
+
         hidden_with_time_axis = tf.expand_dims(dec_hidden, 1)  # shape=(16, 1, 256)
+
         # att_features = self.W1(enc_output) + self.W2(hidden_with_time_axis)
 
+        # 为了减少attention的计算
         def masked_attention(score):
             """
             :param score: shape=(16, 200, 1)
@@ -50,9 +53,12 @@ class BahdanauAttentionCoverage(tf.keras.layers.Layer):
             """
             改造seq2seq中的score，加入coverge
             your code
-            e = ...
+            e = VT tanh(Wh*hi + Ws*St + Wc*Ci +b
             """
+
+            e = self.V(tf.nn.tanh(self.W1(enc_output) + self.W2(hidden_with_time_axis) + self.Wc(prev_coverage)))
             # Calculate attention distribution
+
             attn_dist = masked_attention(e)
             # Update coverage vector
             coverage = attn_dist + prev_coverage
@@ -125,3 +131,6 @@ class Pointer(tf.keras.layers.Layer):
         your code
         return ...
         """
+        # pgn系数 = sigmoid(Wh*context_vec + Ws* decoder_state + Wx * Xt + b)
+        # Xt 为decoder 当前输入
+        return tf.nn.sigmoid(self.w_c_reduce(context_vector) + self.w_s_reduce(state)+self.w_i_reduce(dec_inp))

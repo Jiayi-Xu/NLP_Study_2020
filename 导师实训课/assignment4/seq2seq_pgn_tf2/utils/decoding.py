@@ -16,6 +16,7 @@ def calc_final_dist(_enc_batch_extend_vocab, vocab_dists, attn_dists, p_gens, ba
 
     # Concatenate some zeros to each vocabulary dist, to hold the probabilities for in-article OOV words
     # the maximum (over the batch) size of the extended vocabulary
+    # 计算超出的字典大小
     extended_size = vocab_size + batch_oov_len
     extra_zeros = tf.zeros((batch_size, batch_oov_len))
     # list length max_dec_steps of shape (batch_size, extended_size)
