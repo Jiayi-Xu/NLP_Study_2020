@@ -30,6 +30,7 @@ class Encoder(tf.keras.layers.Layer):
         output, forward_state, backward_state = self.bigru(x, initial_state=hidden)
         state = tf.concat([forward_state, backward_state], axis=1)
         # output, state = self.gru(x, initial_state=hidden)
+        # state 为最后一个hidden输出 output是所有hidden输出
         return output, state
 
     def initialize_hidden_state(self):
